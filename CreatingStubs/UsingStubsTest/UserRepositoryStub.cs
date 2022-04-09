@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace UsingStubs.Unitest
 {
-    internal class UserRepositoryFake : IUserRepository
+    internal class UserRepositoryStub : IUserRepository
     {
         private string username;
 
-        public UserRepositoryFake(string name)
+        public UserRepositoryStub(string name)
         {
             username = name;
         }
