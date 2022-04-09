@@ -26,7 +26,7 @@ Fake: (Far more useful in integration tests). A simpler but full implementation 
 
 For this example, we are going to connect to a database and read user data from it. The simplest implementation is to handle all the database code in our `GetData.cs` class. I'm going to use the `Microsoft.Data.Sqlite`, which is an implementation of the standard .NET library specifically for interacting with SQLite.
 
-In the example code, we are creating a connection to our DB, reading a user based on the ID we passed in and then printing the results to the console.
+In the example code, we are creating a connection to our DB, reading a user based on the ID we passed in and then checking if the name is "Bob". If it is, we replace it with panda because my friend Bob is a jerk and doesn't deserve to be in my database.
 
 ```CSharp
 public class GetData
@@ -48,8 +48,15 @@ public class GetData
 
             using (var reader = command.ExecuteReader())
             {
-               reader.Read();
-               return  reader.GetString(0);
+                reader.Read();
+                var name =  reader.GetString(0);
+
+                if (name == "Bob")
+                {
+                    return "Panda";
+                }
+
+                return name;
             }
         }
     }
@@ -64,4 +71,79 @@ In order to split apart the dependency between the code we want to test and the 
 
 ## IUserRepository
 
-In this case, we only need a single
+In this case, we only need a single method - Getting the username from the ID
+
+```CSharp
+public interface IUserRepository
+{
+    public string GetUsernameById(int id);
+}
+```
+
+## User Repository
+
+We can now extract out all our database code into a seperate user repository class. In the real world, we might add some abstraction here as well in order to test this classor or use fakes/integration tests to test this piece.
+
+```CSharp
+internal class UserRepository : IUserRepository
+{
+    private SqliteConnection _conn;
+
+    public UserRepository(SqliteConnection conn)
+    {
+        _conn = conn;
+    }
+
+    public string GetUsernameById(int id)
+    {
+        _conn.Open();
+
+        var command = _conn.CreateCommand();
+        command.CommandText =
+        @"
+                SELECT name
+                FROM user
+                WHERE id = $id
+            ";
+        command.Parameters.AddWithValue("$id", id);
+
+        using (var reader = command.ExecuteReader())
+        {
+            reader.Read();
+            return reader.GetString(0);
+        }
+    }
+}
+```
+
+## Updating the GetData Class
+
+We now need the GetData class to work with either our UserRepository class or the mock we will make later. A common way to do this is with either method or constructor injection. We replace the database code with a call to our new repository.
+
+```CSharp
+public class GetDataWithInterface
+{
+    private IUserRepository userRepo;
+
+    public GetDataWithInterface(IUserRepository repo)
+    {
+        this.userRepo = repo;
+    }
+
+    public string SelectById(int id)
+    {
+        var name = userRepo.GetUsernameById(id);
+
+        if (name == "Bob")
+        {
+            return "Panda";
+        }
+
+        return name;
+    }
+}
+```
+
+## Creating the Stub
+
+Now that our code is testable
