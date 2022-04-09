@@ -8,40 +8,40 @@ using System.Threading.Tasks;
 
 namespace CreatingStubs
 {
-    internal class UserRepository : IUserRepository
+internal class UserRepository : IUserRepository
+{
+    private SqliteConnection _conn;
+
+    public UserRepository(SqliteConnection conn)
     {
-        private SqliteConnection _conn;
+        _conn = conn;
+    }
 
-        public UserRepository(SqliteConnection conn)
+    public string GetUsernameById(int id)
+    {
+        _conn.Open();
+
+        var command = _conn.CreateCommand();
+        command.CommandText =
+        @"
+                SELECT name
+                FROM user
+                WHERE id = $id
+            ";
+        command.Parameters.AddWithValue("$id", id);
+
+        using (var reader = command.ExecuteReader())
         {
-            _conn = conn;
-        }
+            reader.Read();
+            var name =  reader.GetString(0);
 
-        public string GetUsernameById(int id)
-        {
-            _conn.Open();
-
-            var command = _conn.CreateCommand();
-            command.CommandText =
-            @"
-                    SELECT name
-                    FROM user
-                    WHERE id = $id
-                ";
-            command.Parameters.AddWithValue("$id", id);
-
-            using (var reader = command.ExecuteReader())
+            if(name == "Bob")
             {
-                reader.Read();
-                var name =  reader.GetString(0);
-
-                if(name == "Bob")
-                {
-                    return "Panda";
-                }
-
-                return name;
+                return "Panda";
             }
+
+            return name;
         }
     }
+}
 }

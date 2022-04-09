@@ -22,8 +22,15 @@ namespace CreatingStubs
 
                 using (var reader = command.ExecuteReader())
                 {
-                   reader.Read();
-                   return  reader.GetString(0);
+                    reader.Read();
+                    var name =  reader.GetString(0);
+
+                    if (name == "Bob")
+                    {
+                        return "Panda";
+                    }
+
+                    return name;
                 }
             }
         }
