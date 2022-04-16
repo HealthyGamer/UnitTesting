@@ -146,4 +146,51 @@ public class GetDataWithInterface
 
 ## Creating the Stub
 
-Now that our code is testable
+Now that our code is testable we can make a stub in our test project that will return a specific value when we setup it up without creating any sort of database.
+
+```CSharp
+internal class UserRepositoryStub : IUserRepository
+{
+    private string username;
+
+    public UserRepositoryStub(string name)
+    {
+        username = name;
+    }
+    public string GetUsernameById(int id)
+    {
+        return username;
+    }
+}
+```
+
+The stub is easily setup in tests so that we can quickly test just our business logic.
+
+```CSharp
+public class Tests
+{
+
+    [Test]
+    public void GetData_UsernameBob_ReturnsPanda()
+    {
+        IUserRepository repo = new UserRepositoryStub("Bob");
+        var data = new GetDataWithInterface(repo);
+
+        Assert.AreEqual("Panda", data.SelectById(1));
+
+    }
+
+    [Test]
+    [TestCase("foo")]
+    [TestCase("whatever")]
+    [TestCase("test")]
+    public void GetData_OtherUsername_ReturnsUsername(string name)
+    {
+        IUserRepository repo = new UserRepositoryStub(name);
+        var data = new GetDataWithInterface(repo);
+
+        Assert.AreEqual(name, data.SelectById(1));
+
+    }
+}
+```
