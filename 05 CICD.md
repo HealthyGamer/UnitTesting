@@ -33,3 +33,7 @@ CD does a couple things. The timing of these three things can vary, but all shou
 Repository sites like GitHub and GitLab often include CD tools as part of their offerings. You can also use stand-alone tools like Jenkins, OctupusDeploy, or TeamCity along with any sort of repository management. Stand-alone tools are often used when business requirements mean that you can't store code externally.
 
 For today, we'll use GitHub Actions to setup a pipeline that can handle things like running tests whenever we merge changes.
+
+## Creating a GitHub Actions
+
+Currently GitHub actions [is free](https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions) for public repos, so it is a handy tool for learning this process. It uses .yml files in order to define the steps needed for a specific process.
