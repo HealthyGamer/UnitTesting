@@ -3,7 +3,7 @@ name: Build and deploy ASP.Net Core app to an Azure Web App
 env:
   AZURE_WEBAPP_NAME: hgcicddemo 
   AZURE_WEBAPP_PACKAGE_PATH: './CICD'  
-  DOTNET_VERSION: '5' 
+  DOTNET_VERSION: '5.*' 
 
 on:
   push:
