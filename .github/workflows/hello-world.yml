@@ -1,4 +1,6 @@
 name: Hello World
+
+on:
   push:
     branches:
       - main
