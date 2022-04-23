@@ -42,4 +42,4 @@ jobs:
         run: dir ./
 
       - name: Run UnitTests
-        run: ./NUnit.ConsoleRunner.3.13.0/tools/nunit3-console.exe  UsingStubsTest/bin/Debug/net5.0/CreatingMocks.UnitTest.dll
+        run: ./NUnit.ConsoleRunner.3.13.0/tools/nunit3-console.exe  CICD/UsingStubsTest/bin/Debug/net5.0/CreatingMocks.UnitTest.dll
