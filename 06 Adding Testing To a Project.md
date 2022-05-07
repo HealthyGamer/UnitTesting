@@ -8,6 +8,7 @@
   - Make Any New Code Testable
   - Divide and Conquer
   - Start With Integration and E2E Tests
+  - Collect Data Before and After
 
 ## Convincing Your Boss and Teammates
 
